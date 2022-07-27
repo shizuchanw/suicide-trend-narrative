@@ -6,10 +6,18 @@
 
 	<script>
 		async function init() {
-			const data = await d3.csv("https://raw.githubusercontent.com/shizuchanw/suicide-trend-narrative/main/cleaned-data.csv");
+			const korean_data = await d3.csv("https://raw.githubusercontent.com/shizuchanw/suicide-trend-narrative/main/cleaned-korean-data.csv");
 			const world_data = await d3.csv("https://raw.githubusercontent.com/shizuchanw/suicide-trend-narrative/main/cleaned-world-avg.csv");
-			var svg = d3.select("svg");
 
+			var data = await d3.csv('https://flunky.github.io/cars2017.csv');
+			function test (data) {
+				console.log("here");
+				console.log(data);
+			}
+			test(korean_data);
+
+
+			var svg = d3.select("svg");
 			const width = 400, height = 400, margin = 50;
 			var g = svg.append("g").attr("transform","translate(50,50)");
 
@@ -23,20 +31,46 @@
 
     		// y axis
     		var y = d3.scaleLinear()
-      			.domain([0, 100])
+      			.domain([0, 80])
       			.range([ height, 0 ]);
     		g.append("g").call(d3.axisLeft(y));
 
+
       		// line chart korea
-			g.append("path").data(data)
-				.attr("fill", "none")
-      			.attr("stroke", "steelblue")
-      			.attr("stroke-width", 1.5)
-      			.attr("d", function(d){
-      				return d3.line()
-        			.x(function(d) { return x(d.Year) })
-        			.y(function(d) { return y(d.Suicides_per_100KPop) })
-        		});
+      // 		var groups = d3.map(korean_data, function(d){return(d.gender)}).keys();
+      // 		var stackedData = d3.stack()
+    		// 	.keys(groups)
+    		// 	.data(korean_data);
+    		// var color = d3.scaleOrdinal()
+    		// 	.domain(groups)
+    		// 	.range(['#6dcdd6','#d66daa']);
+
+
+			// g.append("path").data(korean_data)
+			// 	.attr("fill", "none")
+   //    			.attr("stroke", "steelblue")
+   //    			.attr("stroke-width", 1.5)
+   //    			.attr("d", function(d){
+   //    				return d3.line()
+   //      			.x(function(d) { return x(d.year) })
+   //      			.y(function(d) { return y(d.avg_suicide) })
+   //      		});
+
+   			// Show the bars
+  			// svg.append("g")
+    	// 		.selectAll("g")
+    	// 		.data(stackedData)
+    	// 		.enter().append("g")
+     //  			.attr("fill", function(d) { return color(d.key); })
+     //  			// create each stacked bar
+     //  			.selectAll("rect")
+     //  			.data(function(d) { return d; })
+     //  			.enter().append("rect")
+     //    		.attr("x", function(d) { return x(d.data.group); })
+     //    		.attr("y", function(d) { return y(d[1]); })
+     //    		.attr("height", function(d) { return y(d[0]) - y(d[1]); })
+     //    		.attr("width",x.bandwidth());
+
 			
 		}
 	</script>
