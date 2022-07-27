@@ -13,7 +13,7 @@
 
 			// x axis
 			var x = d3.scaleTime()
-      			.domain(d3.extent(data, function(d) { return d.year; }))
+      			.domain(d3.extent(data, function(d) { return d.Year; }))
       			.range([ 0, width ]);
     		svg.append("g")
       			.attr("transform", "translate(0," + height + ")")
@@ -21,7 +21,7 @@
 
     		// y axis
     		var y = d3.scaleLinear()
-      			.domain([0, d3.max(data, function(d) { return +d.value; })])
+      			.domain([0, d3.max(data, function(d) { return +d.Suicides_per_100KPop; })])
       			.range([ height, 0 ]);
     		svg.append("g")
       			.call(d3.axisLeft(y));
