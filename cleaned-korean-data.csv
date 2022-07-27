@@ -1,4 +1,4 @@
-sex,year,suicides_no,population,suicides/100k pop
+sex,year,suicides_no,population,suicides_per_100kpop
 female,1985,998,18412100,38.29
 female,1986,890,18676600,32.34
 female,1987,901,18956800,32.33
