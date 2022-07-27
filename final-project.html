@@ -10,26 +10,31 @@
 			var svg = d3.select("svg");
 
 			const width = 400, height = 400, margin = 50;
+			var g = svg.append("g").attr("transform","translate(50,50)");
 
 			// x axis
 			var x = d3.scaleTime()
-      			.domain(d3.extent(data, function(d) { return d.Year; }))
+      			.domain([new Date("1985-01-01"), new Date("2015-01-01")])
       			.range([ 0, width ]);
-    		svg.append("g")
+    		g.append("g")
       			.attr("transform", "translate(0," + height + ")")
-      			.call(d3.axisBottom(x));
+      			.call(d3.axisBottom(x).tickFormat(d3.timeFormat("%Y")));
 
     		// y axis
     		var y = d3.scaleLinear()
-      			.domain([0, d3.max(data, function(d) { return +d.Suicides_per_100KPop; })])
+      			.domain([0, 100])
       			.range([ height, 0 ]);
-    		svg.append("g")
-      			.call(d3.axisLeft(y));
+    		g.append("g").call(d3.axisLeft(y));
 
-			svg.selectAll("rect").data(data);
+      		// line chart
+			g.append("path").data(data)
+				.attr("fill", "none")
+      			.attr("stroke", "steelblue")
+      			.attr("stroke-width", 1.5)
+      			.attr("d", d3.line()
+        			.x(function(d) { return d.Year })
+        			.y(function(d) { return d.Suicides_per_100KPop }));
 			
-
-			// line chart
 		}
 	</script>
 </html>
