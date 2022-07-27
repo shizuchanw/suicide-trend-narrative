@@ -8,14 +8,6 @@
 		async function init() {
 			const korean_data = await d3.csv("https://raw.githubusercontent.com/shizuchanw/suicide-trend-narrative/main/cleaned-korean-data.csv");
 
-			var data = await d3.csv('https://flunky.github.io/cars2017.csv');
-			function test (data) {
-				console.log("here");
-				console.log(data);
-			}
-			test(korean_data);
-
-
 			var svg = d3.select("svg");
 			const width = 400, height = 400, margin = 50;
 			var g = svg.append("g").attr("transform","translate(50,50)");
@@ -36,13 +28,13 @@
 
 
       		// line chart korea
-      // 		var groups = d3.map(korean_data, function(d){return(d.gender)}).keys();
-      // 		var stackedData = d3.stack()
-    		// 	.keys(groups)
-    		// 	.data(korean_data);
-    		// var color = d3.scaleOrdinal()
-    		// 	.domain(groups)
-    		// 	.range(['#6dcdd6','#d66daa']);
+      		var groups = d3.map(korean_data, function(d){return(d.sex)}).keys();
+      		var stackedData = d3.stack()
+    			.keys(groups)
+    			(korean_data);
+    		var color = d3.scaleOrdinal()
+    			.domain(groups)
+    			.range(['#6dcdd6','#d66daa']);
 
 
 			// g.append("path").data(korean_data)
@@ -56,19 +48,19 @@
    //      		});
 
    			// Show the bars
-  			// svg.append("g")
-    	// 		.selectAll("g")
-    	// 		.data(stackedData)
-    	// 		.enter().append("g")
-     //  			.attr("fill", function(d) { return color(d.key); })
-     //  			// create each stacked bar
-     //  			.selectAll("rect")
-     //  			.data(function(d) { return d; })
-     //  			.enter().append("rect")
-     //    		.attr("x", function(d) { return x(d.data.group); })
-     //    		.attr("y", function(d) { return y(d[1]); })
-     //    		.attr("height", function(d) { return y(d[0]) - y(d[1]); })
-     //    		.attr("width",x.bandwidth());
+  			svg.append("g")
+    			.selectAll("g")
+    			.data(stackedData)
+    			.enter().append("g")
+      			.attr("fill", function(d) { return color(d.key); })
+      			// create each stacked bar
+      			.selectAll("rect")
+      			.data(function(d) { return d; })
+      			.enter().append("rect")
+        		.attr("x", function(d) { return x(d.data.group); })
+        		.attr("y", function(d) { return y(d[1]); })
+        		.attr("height", function(d) { return y(d[0]) - y(d[1]); })
+        		.attr("width",x.bandwidth());
 
 			
 		}
