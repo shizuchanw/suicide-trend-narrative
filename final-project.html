@@ -7,6 +7,7 @@
 	<script>
 		async function init() {
 			const data = await d3.csv("https://raw.githubusercontent.com/shizuchanw/suicide-trend-narrative/main/cleaned-data.csv");
+			const world_data = await d3.csv("https://raw.githubusercontent.com/shizuchanw/suicide-trend-narrative/main/cleaned-world-avg.csv");
 			var svg = d3.select("svg");
 
 			const width = 400, height = 400, margin = 50;
@@ -26,14 +27,16 @@
       			.range([ height, 0 ]);
     		g.append("g").call(d3.axisLeft(y));
 
-      		// line chart
+      		// line chart korea
 			g.append("path").data(data)
 				.attr("fill", "none")
       			.attr("stroke", "steelblue")
       			.attr("stroke-width", 1.5)
-      			.attr("d", d3.line()
-        			.x(function(d) { return d.Year })
-        			.y(function(d) { return d.Suicides_per_100KPop }));
+      			.attr("d", function(d){
+      				return d3.line()
+        			.x(function(d) { return x(d.Year) })
+        			.y(function(d) { return y(d.Suicides_per_100KPop) })
+        		});
 			
 		}
 	</script>
