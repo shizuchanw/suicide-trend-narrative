@@ -6,7 +6,7 @@
 			<svg width=600 height=600></svg>
 			<div id="tooltip" opacity=0></div>
 		</div>
-		<a href="./scene2.html" style="margin-left: 270px;"><button>Next &#8594;</button></a>
+		<a href="./scene2.html" style="margin-left: 100px;"><button>Prev &#8592;</button></a>
 	</body>
 
 	<script>
@@ -95,19 +95,19 @@
         	//------------------------annotation------------------------//
 			const annotations = [{
 			  note: {
-			  	title: "1985-1993",
-			    label: "Low Suicide Rate"
+			  	title: "2003-2013",
+			    label: "High Suicide Rate"
 			  },
 			  type: d3.annotationCalloutRect,
 			  // position of the text
 			  dy: 10,
-			  dx: 200,
+			  dx: -50,
 			  // position of the rect
-			  x:10,
-			  y:250,
+			  x:200,
+			  y:-10,
 			  subject: {
 			  	// size of the rect
-			    width: 100,
+			    width: 200,
 			    height: 100
 			  }
 			}];
@@ -133,7 +133,7 @@
         		  tooltip.style("opacity",1)
         			.style("left",d3.select(this).attr("cx")+"px")
         			.style("top", d3.select(this).attr("cy")+"px")
-        			.html("Compared to the other time in the Sixth Republic Era of South Korea (1987-present), this period (1985-1993) has the lowest suicide rate of around 100-150 cases per 100,000 population. <br>To learn more about this period, see <a href='https://en.wikipedia.org/wiki/History_of_South_Korea#Sixth_Republic_(1987–present)'>Sixth Republic</a>" )
+        			.html("The suicide rate skyrocketed after 2000. During the decade from 2003 to 2013, the suicide rate was around 420-520 cases per 100,000 population, around 4 times as much as period 1985-1993. <br>To learn more about this period, see <a href='https://en.wikipedia.org/wiki/History_of_South_Korea#Sixth_Republic_(1987–present)'>Sixth Republic</a>" )
         	    });
 
         	//------------------------scatter plot------------------------//          

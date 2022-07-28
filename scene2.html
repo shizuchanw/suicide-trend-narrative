@@ -1,8 +1,13 @@
 <html>
 	<script src='https://d3js.org/d3.v5.min.js'></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.5.1/d3-annotation.min.js" integrity="sha512-iBAeBWWWFb8HqSBcrqcz98iIpuVH1la39dEYHtyQ/pGpeCQTQVvLJOWAuhv2Q7JSHp9k7hWA7sGxU3hHJe+tFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<body onload="init()">
-		<h2></h1>
-		<svg width=600 height=600></svg>
+		<div id="container">
+			<svg width=600 height=600></svg>
+			<div id="tooltip" opacity=0></div>
+		</div>
+		<a href="./index.html" style="margin-left: 100px;"><button>Prev &#8592;</button></a>
+		<a href="./scene3.html" style="margin-left: 50px;"><button>Next &#8594;</button></a>
 	</body>
 
 	<script>
@@ -15,6 +20,29 @@
 				width = svg.attr("width") - margin*2,  
 				height = svg.attr("height") - margin*2;
 			var g = svg.append("g").attr("transform","translate(" + margin +"," + margin +")");
+
+       		//------------------------style------------------------//
+
+       		var tooltip = d3.select("#tooltip")
+       			.style("display","float")
+       			.style("border-style", "solid")
+       			.style("opacity", 0)
+       			.style("font-family", "Helvetica")
+       			.style("font-size", "18px")
+       			.style("line-height", "30px")
+       			.style("padding", "100px")
+       			.style("margin", "100px 100px 100px 0px");
+
+       		d3.select("#container")
+       			.style("display","grid")
+       			.style("grid-template-columns", "50% 50%");
+       		d3.selectAll("button")
+       			.style("background", "linear-gradient(180deg, #4B91F7 0%, #367AF6 100%)")
+       			.style("border", "none")
+       			.style("color", "white")
+       			.style("padding", "15px 32px")
+       			.style("cursor", "pointer")
+       			.style("font-size", "16px");
 
 
 			//------------------------legend------------------------//
@@ -50,19 +78,8 @@
         		.attr('transform', 'translate(-50, 200) rotate(-90)')
         		.text('Suicide Cases / 100K population');
 
-        	//------------------------scatter plot------------------------//
-        	g.append('g')
-        		.selectAll("dot")
-        		.data(korean_data)
-        		.enter()
-        		.append("circle")
-        		.attr("cx", function (d) { return x(d.year); } )
-        		.attr("cy", function (d) { return y(d.suicide_per100k); } )
-        		.attr("r", 2)
-        		.style("fill", "#CC0000");
 
-
-      		//------------------------line chart------------------------//
+        	//------------------------line chart------------------------//
       		var line = d3.line()
         		.x(function(d) { return x(d.year); }) 
         		.y(function(d) { return y(d.suicide_per100k); }) 
@@ -74,9 +91,76 @@
         		.style("fill", "none")
         		.style("stroke", "steelblue")
         		.style("stroke-width", "1.5");
+
+
+        	//------------------------annotation------------------------//
+			const annotations = [{
+			  note: {
+			  	title: "1997-1999",
+			    label: "A Suicide Peak"
+			  },
+			  type: d3.annotationCalloutRect,
+			  // position of the text
+			  dy: 100,
+			  dx: 100,
+			  // position of the rect
+			  x:150,
+			  y:150,
+			  subject: {
+			  	// size of the rect
+			    width: 50,
+			    height: 50
+			  }
+			}];
+
+			const makeAnnotations = d3.annotation()
+			  .notePadding(20)
+			  .accessors({
+			    x: d => x(d.year),
+			    y: d => y(d.suicide_per100k)
+			  })
+			  .accessorsInverse({
+			     year: d => x.invert(d.x),
+			     suicide_per100k: d => y.invert(d.y)
+			  })
+			  .annotations(annotations);
+
+			g.append("g")
+			  .attr("class", "annotation-group")
+			  .style("cursor", "pointer")
+			  .call(makeAnnotations)
+			  // drill down
+			  .on("mouseover", function(d,i) {
+        		  tooltip.style("opacity",1)
+        			.style("left",d3.select(this).attr("cx")+"px")
+        			.style("top", d3.select(this).attr("cy")+"px")
+        			.html("There was a suicide peak during the period of 1997-1999, which coincides with the period of South Korean Financial Crisis. <br>To learn more about this period, see <a href='https://en.wikipedia.org/wiki/History_of_South_Korea#Sixth_Republic_(1987–present)'>Sixth Republic</a>" )
+        	    });
+
+        	//------------------------scatter plot------------------------//          
+        	g.append('g')
+        		.selectAll("circle")
+        		.data(korean_data)
+        		.enter()
+        		.append("circle")
+        		.attr("cx", function (d) { return x(d.year); } )
+        		.attr("cy", function (d) { return y(d.suicide_per100k); } )
+        		.attr("r", 5)
+        		.style("fill", "#CC0000")
+        		// add tooltip
+        		.on("mouseover", function(d,i) {
+        		  tooltip.style("opacity",1)
+        			.style("left",d3.event.pageX+"px")
+        			.style("top", d3.event.pageY+"px")
+        			.html("Year: " + d.year + "<br>" 
+        				+ "suicide per 100,000 people: " + Math.round(d.suicide_per100k) + "<br>" 
+        				+ "female: " + (d.female_suicide_per100k / d.suicide_per100k * 100).toFixed(2) + "%" + "<br>" 
+        				+ "male: " + (100 - d.female_suicide_per100k / d.suicide_per100k * 100).toFixed(2) + "%" )
+        	    })
+        	    .on("mouseout", function() {
+        	    	tooltip.style("opacity",0)
+        	    });
+
 		}
 	</script>
-	<br>
-	<a href="" style="margin-left: 100px;"><button>Prev</button></a>
-	<a href="" style="margin-left: 50px;"><button>Next</button></a>
 </html>
